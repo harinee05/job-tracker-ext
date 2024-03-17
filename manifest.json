@@ -1,0 +1,36 @@
+{
+    "name": "Job Tracker",
+    "version": "1.0",
+    "manifest_version": 3,
+    "description": "Track job listings",
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/job_icon.png",
+            "48": "images/job_icon.png",
+            "128": "images/job_icon.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "images/job_icon.png",
+        "48": "images/job_icon.png",
+        "128": "images/job_icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://.com/*"
+            ],
+            "js": [
+                "contentScript.js"
+            ]
+        }
+    ]
+}

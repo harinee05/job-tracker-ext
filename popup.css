@@ -1,0 +1,64 @@
+/* popup.css */
+body {
+    margin: 0;
+    background: linear-gradient(-45deg, #bdcef0, #c2c4d4, #b1b1f0, #4567ab);
+    animation: Gradient 15s ease infinite;
+    min-width: 800px;
+}
+
+h1 {
+    text-align: center;
+    /* Align the h1 element to the center */
+    font-size: 24px;
+    /* Adjust font size as needed */
+    margin: 0;
+    /* Remove default margin */
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.grid-container {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    /* Define a 3-column grid */
+    gap: 2px;
+    /* Add some spacing between grid items */
+}
+
+.grid-item {
+    width: 100%;
+    /* Adjust width as needed */
+    padding: 3px;
+    /* Add padding for spacing */
+}
+
+#tools {
+    grid-row: 2;
+    /* Position the tools div in the second row */
+    align-items: center;
+
+}
+
+.linkList {
+
+    font-size: 12px;
+
+    padding: 10px;
+    /* Remove default padding */
+}
+
+.linker {
+    overflow-wrap: break-word;
+}
