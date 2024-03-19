@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function ()
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", "job_links.csv");
-            document.body.appendChild(link); // Required for Firefox
+            document.body.appendChild(link); // Required for Firefox browser
             link.click(); // This will download the data file named "job_links.csv".
         });
     });
