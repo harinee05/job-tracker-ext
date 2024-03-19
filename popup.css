@@ -1,7 +1,7 @@
 /* popup.css */
 body {
     margin: 0;
-    background: linear-gradient(-45deg, #bdcef0, #c2c4d4, #b1b1f0, #4567ab);
+    background: linear-gradient(-45deg, #031888, #6096fd, #aab6fb, #fb7b8e);
     animation: Gradient 15s ease infinite;
     min-width: 800px;
 }
@@ -46,9 +46,58 @@ h1 {
 
 #tools {
     grid-row: 2;
-    /* Position the tools div in the second row */
+    display: flex;
+    padding: 10px;
     align-items: center;
+    justify-content: space-evenly;
+    border-style: dashed;
+    border-color: #6096fd;
+    border-radius: 5%;
 
+}
+
+#totalJobs {
+    display: flex;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+
+
+}
+
+#todayJobs {
+    display: flex;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+    border-radius: 28%;
+    align-items: center;
+    font-size: 12px;
+
+}
+
+#counts {
+    gap: 0;
+    animation: Gradient 15s ease infinite;
+    background: linear-gradient(-45deg, #fb788e, #6096fd);
+    padding: 0%;
+
+    @keyframes Gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+
+    border-radius: 5%;
 }
 
 .linkList {
