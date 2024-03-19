@@ -1,8 +1,13 @@
 /* popup.css */
 body {
     margin: 0;
-    background: linear-gradient(-45deg, #031888, #6096fd, #aab6fb, #fb7b8e);
+    /* background: linear-gradient(-45deg, #031888, #6096fd, #aab6fb, #fb7b8e);
     animation: Gradient 15s ease infinite;
+    
+    */
+
+
+
     min-width: 800px;
 }
 
@@ -15,6 +20,7 @@ h1 {
     /* Remove default margin */
 }
 
+/* 
 @keyframes Gradient {
     0% {
         background-position: 0% 50%;
@@ -26,8 +32,8 @@ h1 {
 
     100% {
         background-position: 0% 50%;
-    }
-}
+    } 
+}*/
 
 .grid-container {
     display: grid;

@@ -36,9 +36,10 @@ document.addEventListener('DOMContentLoaded', function ()
         {
             const links = data.jobLinks || [];
             let csvContent = "data:text/csv;charset=utf-8,";
-            links.forEach(function (link)
+            links.forEach(function (linkObject)
             {
-                csvContent += `${link}\n`;
+                // Assuming each linkObject has a 'link' property
+                csvContent += `${linkObject.link}\n`; // Access the 'link' property of the object
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function ()
             link.click(); // This will download the data file named "job_links.csv".
         });
     });
+
 
 
     function saveLink(url)
@@ -80,21 +82,24 @@ document.addEventListener('DOMContentLoaded', function ()
 
     function displayLinks()
     {
-        linkList.innerHTML = '';
+        linkList.innerHTML = ''; // Clear the current list
         chrome.storage.sync.get('jobLinks', function (data)
         {
-            const links = data.jobLinks || [];
+            const links = data.jobLinks || []; // Retrieve the links from storage
             const totalJobsElement = document.getElementById('totalJobs');
             totalJobsElement.textContent = `Total Count of Jobs: ${links.length}`;
 
-            // Your logic to count jobs applied today
             const today = new Date().toISOString().split('T')[0];
             const todayJobs = links.filter(link => link.savedAt.split('T')[0] === today).length;
             document.getElementById('todayJobs').textContent = `Jobs Applied today: ${todayJobs}`;
 
+            // Calculate the start index for displaying the last 5 links
+            const startIndex = Math.max(0, links.length - 5);
 
-            links.forEach(function (linkObject, index)
+            // Display only the last 5 links
+            for (let i = startIndex; i < links.length; i++)
             {
+                const linkObject = links[i];
                 const listItem = document.createElement('div');
                 listItem.classList.add("row");
 
@@ -108,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function ()
                 const delDiv = document.createElement('div');
                 delDiv.classList.add("col");
 
-                // Access the link URL from the linkObject
                 const linkElement = document.createElement('a');
                 linkElement.href = linkObject.link;
                 linkElement.textContent = linkObject.link;
@@ -127,12 +131,11 @@ document.addEventListener('DOMContentLoaded', function ()
                         chrome.runtime.sendMessage({
                             action: 'editJobs',
                             type: 'edit',
-                            index: index,
+                            index: i, // Use the current index in the loop
                             newLink: newLink
                         }, function (response)
                         {
                             console.log(response);
-                            console.log("3");
                             displayLinks(); // Refresh the list after editing
                         });
                     }
@@ -148,11 +151,10 @@ document.addEventListener('DOMContentLoaded', function ()
                     chrome.runtime.sendMessage({
                         action: 'deleteJobs',
                         type: 'delete',
-                        index: index
+                        index: i // Use the current index in the loop
                     }, function (response)
                     {
                         console.log(response);
-
                         displayLinks(); // Refresh the list after deleting
                     });
                 });
@@ -160,10 +162,8 @@ document.addEventListener('DOMContentLoaded', function ()
                 listItem.appendChild(delDiv);
 
                 linkList.appendChild(listItem);
-            });
+            }
         });
     }
-
-
 
 });
