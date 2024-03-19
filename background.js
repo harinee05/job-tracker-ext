@@ -8,7 +8,8 @@ function initializeJobLinks()
         chrome.storage.sync.get(['jobLinks'], (result) =>
         {
             jobLinks = result.jobLinks || []; // Initialize jobLinks from storage
-            resolve(); // Resolve the promise after jobLinks is initialized
+
+            resolve(jobLinks); // Resolve the promise after jobLinks is initialized
         });
     });
 }

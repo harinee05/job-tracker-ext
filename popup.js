@@ -171,15 +171,17 @@ document.addEventListener('DOMContentLoaded', function ()
         chrome.storage.sync.get('jobLinks', function (data)
         {
             const links = data.jobLinks || [];
-            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
             const totalJobsElement = document.getElementById('totalJobs');
             totalJobsElement.textContent = links.length; // Update the totalJobs element
-
-            // Filter job links based on the saved date
-            const todayJobs = links.filter(linkObject => linkObject.savedAt.split(' ')[0] === today).length;
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+            const todayJobs = links.filter(linkObject =>
+            {
+                // Normalize savedAt to UTC and format as YYYY-MM-DD
+                const savedAtUTC = new Date(linkObject.savedAt).toISOString().split('T')[0];
+                return savedAtUTC === today;
+            }).length;
             document.getElementById('todayJobs').textContent = todayJobs;
-
             links.forEach(function (linkObject, index)
             {
                 const listItem = document.createElement('div');
@@ -239,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function ()
                     }, function (response)
                     {
                         console.log(response);
-                        console.log("4");
+
                         displayLinks(); // Refresh the list after deleting
                     });
                 });
