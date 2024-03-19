@@ -71,6 +71,17 @@ initializeJobLinks().then(() =>
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>
 {
+    if (request.action === 'initializeJobLinks')
+    {
+        initializeJobLinks().then(links =>
+        {
+            sendResponse({ status: 'success', jobLinks: links });
+        }).catch(error =>
+        {
+            sendResponse({ status: 'error', message: error.message });
+        });
+        return true; // Indicates that the response will be sent asynchronously
+    }
     if (request.action === 'editJobs')
     {
         updateJobLinks(request.index, request.newLink)

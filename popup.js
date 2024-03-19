@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function ()
 {
+    chrome.runtime.sendMessage({ action: 'initializeJobLinks' }, function (response)
+    {
+        if (response && response.status === 'success')
+        {
+            console.log('jobLinks initialized');
+            // Now you can use response.jobLinks to update your UI
+        } else
+        {
+            console.error('Failed to initialize jobLinks:', response.message);
+        }
+    });
     const saveButton = document.getElementById('savejob');
     const linkList = document.getElementById('linkList');
     const exportCsvButton = document.getElementById('exportcsv');
@@ -38,19 +49,6 @@ document.addEventListener('DOMContentLoaded', function ()
         });
     });
 
-    // function saveLink(url)
-    // {
-    //     chrome.storage.sync.get('jobLinks', function (data)
-    //     {
-    //         const links = data.jobLinks || [];
-    //         links.push(url);
-    //         chrome.storage.sync.set({ jobLinks: links }, function ()
-    //         {
-    //             console.log("2");
-    //             displayLinks(); // Refresh the list after saving
-    //         });
-    //     });
-    // }
 
     function saveLink(url)
     {
@@ -79,109 +77,22 @@ document.addEventListener('DOMContentLoaded', function ()
             }
         });
     }
-    // function displayLinks()
-    // {
 
-    //     linkList.innerHTML = '';
-
-    //     chrome.storage.sync.get('jobLinks', function (data)
-    //     {
-    //         const links = data.jobLinks || [];
-    //         const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-    //         const totalJobsElement = document.getElementById('totalJobs');
-    //         totalJobsElement.textContent = links.length; // Update the totalJobs element
-
-    //         const todayJobs = links.filter(linkObject => linkObject.savedAt.split(' ')[0] === today).length;
-    //         console.log(todayJobs);
-    //         document.getElementById('todayJobs').textContent = todayJobs;
-    //         links.forEach(function (linkObject, index)
-    //         {
-    //             const listItem = document.createElement('div');
-    //             listItem.classList.add("row");
-
-    //             const linkDiv = document.createElement('div');
-    //             linkDiv.classList.add("col-10");
-    //             linkDiv.classList.add("linker");
-
-    //             const editDiv = document.createElement('div');
-    //             editDiv.classList.add("col");
-
-    //             const delDiv = document.createElement('div');
-    //             delDiv.classList.add("col");
-
-    //             // Access the link URL from the linkObject
-    //             const linkElement = document.createElement('a');
-    //             linkElement.href = linkObject.link;
-    //             linkElement.textContent = linkObject.link;
-
-    //             linkDiv.appendChild(linkElement);
-    //             listItem.appendChild(linkDiv);
-
-    //             // Add edit button
-    //             const editButton = document.createElement('button');
-    //             editButton.textContent = 'Edit';
-    //             editButton.addEventListener('click', function ()
-    //             {
-    //                 const newLink = prompt("Edit link:", linkObject.link);
-    //                 if (newLink)
-    //                 {
-    //                     chrome.runtime.sendMessage({
-    //                         action: 'editJobs',
-    //                         type: 'edit',
-    //                         index: index,
-    //                         newLink: newLink
-    //                     }, function (response)
-    //                     {
-    //                         console.log(response);
-    //                         console.log("3");
-    //                         displayLinks(); // Refresh the list after editing
-    //                     });
-    //                 }
-    //             });
-    //             editDiv.appendChild(editButton);
-    //             listItem.appendChild(editDiv);
-
-    //             // Add delete button
-    //             const deleteButton = document.createElement('button');
-    //             deleteButton.textContent = 'Delete';
-    //             deleteButton.addEventListener('click', function ()
-    //             {
-    //                 chrome.runtime.sendMessage({
-    //                     action: 'deleteJobs',
-    //                     type: 'delete',
-    //                     index: index
-    //                 }, function (response)
-    //                 {
-    //                     console.log(response);
-    //                     console.log("4");
-    //                     displayLinks(); // Refresh the list after deleting
-    //                 });
-    //             });
-    //             delDiv.appendChild(deleteButton);
-    //             listItem.appendChild(delDiv);
-
-    //             linkList.appendChild(listItem);
-    //         });
-    //     });
-    // }
     function displayLinks()
     {
         linkList.innerHTML = '';
-
         chrome.storage.sync.get('jobLinks', function (data)
         {
             const links = data.jobLinks || [];
-
             const totalJobsElement = document.getElementById('totalJobs');
-            totalJobsElement.textContent = links.length; // Update the totalJobs element
-            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-            const todayJobs = links.filter(linkObject =>
-            {
-                // Normalize savedAt to UTC and format as YYYY-MM-DD
-                const savedAtUTC = new Date(linkObject.savedAt).toISOString().split('T')[0];
-                return savedAtUTC === today;
-            }).length;
-            document.getElementById('todayJobs').textContent = todayJobs;
+            totalJobsElement.textContent = `Total Count of Jobs: ${links.length}`;
+
+            // Your logic to count jobs applied today
+            const today = new Date().toISOString().split('T')[0];
+            const todayJobs = links.filter(link => link.savedAt.split('T')[0] === today).length;
+            document.getElementById('todayJobs').textContent = `Jobs Applied today: ${todayJobs}`;
+
+
             links.forEach(function (linkObject, index)
             {
                 const listItem = document.createElement('div');
