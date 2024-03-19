@@ -70,7 +70,7 @@ h1 {
     display: flex;
     color: rgb(0, 0, 0);
     justify-content: center;
-    border-radius: 28%;
+
     align-items: center;
     font-size: 12px;
 
@@ -78,26 +78,11 @@ h1 {
 
 #counts {
     gap: 0;
-    animation: Gradient 15s ease infinite;
-    background: linear-gradient(-45deg, #fb788e, #6096fd);
+
     padding: 0%;
-
-    @keyframes Gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-
-    border-radius: 5%;
+    border-style: dashed;
+    border-radius: 10%;
+    border-color: #fb7b8e;
 }
 
 .linkList {
