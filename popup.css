@@ -37,14 +37,16 @@ h1 {
 
 .grid-container {
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
-    /* Define a 3-column grid */
+    grid-template-columns: repeat(3, 3fr);
+    /* 3 columns */
+    grid-template-rows: auto;
+    /* Adjust row height based on content */
     gap: 2px;
-    /* Add some spacing between grid items */
 }
 
 .grid-item {
-    width: 100%;
+
+    width: 800px;
     /* Adjust width as needed */
     padding: 3px;
     /* Add padding for spacing */
@@ -55,18 +57,18 @@ h1 {
     display: flex;
     padding: 10px;
     align-items: center;
-    justify-content: space-evenly;
-    border-style: dashed;
+    justify-content: space-around;
+    border-style: double dashed;
     border-color: #6096fd;
     border-radius: 5%;
+    grid-column: span 3;
 
 }
 
 #totalJobs {
     display: flex;
     color: rgb(0, 0, 0);
-    justify-content: center;
-    align-items: center;
+
     font-size: 12px;
 
 
@@ -75,30 +77,34 @@ h1 {
 #todayJobs {
     display: flex;
     color: rgb(0, 0, 0);
-    justify-content: center;
 
-    align-items: center;
     font-size: 12px;
 
 }
 
 #counts {
-    gap: 0;
+    display: flex;
 
-    padding: 0%;
+    flex-direction: column;
+    grid-column: span 3;
+
     border-style: dashed;
     border-radius: 10%;
     border-color: #fb7b8e;
+
+
 }
 
 .linkList {
 
     font-size: 12px;
-
+    grid-column: span 3;
     padding: 10px;
     /* Remove default padding */
 }
 
 .linker {
+
     overflow-wrap: break-word;
+    width: 500px;
 }

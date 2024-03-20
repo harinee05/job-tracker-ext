@@ -36,10 +36,9 @@ document.addEventListener('DOMContentLoaded', function ()
         {
             const links = data.jobLinks || [];
             let csvContent = "data:text/csv;charset=utf-8,";
-            links.forEach(function (linkObject)
+            links.forEach(function (link)
             {
-                // Assuming each linkObject has a 'link' property
-                csvContent += `${linkObject.link}\n`; // Access the 'link' property of the object
+                csvContent += `${link}\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -51,9 +50,15 @@ document.addEventListener('DOMContentLoaded', function ()
     });
 
 
-
     function saveLink(url)
     {
+        // Check if the URL is valid
+        if (!url)
+        {
+            console.error('Invalid URL:', url);
+            return;
+        }
+
         // Create an object with the link and the current datetime
         const linkObject = {
             link: url,
@@ -63,43 +68,52 @@ document.addEventListener('DOMContentLoaded', function ()
         chrome.storage.sync.get('jobLinks', function (data)
         {
             const links = data.jobLinks || [];
-            if (links.some(l => l.link == url))
+            // Check if the linkObject is valid
+            if (!linkObject.link || typeof linkObject.savedAt !== 'string')
+            {
+                console.error('Invalid linkObject:', linkObject);
+                return;
+            }
+            // Check if the link already exists
+            if (links.some(l => l && l.link === linkObject.link))
             {
                 alert('You already applied');
-            }
-            else
+            } else
             {
                 links.push(linkObject); // Save the object instead of just the link
-                chrome.storage.sync.set({ jobLinks: links }, function ()
+                chrome.storage.sync.set({
+                    jobLinks: links
+                }, function ()
                 {
                     console.log("Link saved with datetime:", linkObject.savedAt);
                     displayLinks(); // Refresh the list after saving
                 });
-
             }
         });
     }
 
+
+
     function displayLinks()
     {
-        linkList.innerHTML = ''; // Clear the current list
+        linkList.innerHTML = '';
         chrome.storage.sync.get('jobLinks', function (data)
         {
-            const links = data.jobLinks || []; // Retrieve the links from storage
+            const links = data.jobLinks || [];
             const totalJobsElement = document.getElementById('totalJobs');
             totalJobsElement.textContent = `Total Count of Jobs: ${links.length}`;
 
+            // Your logic to count jobs applied today
             const today = new Date().toISOString().split('T')[0];
-            const todayJobs = links.filter(link => link.savedAt.split('T')[0] === today).length;
+            const todayJobs = links.filter(link => link && link.savedAt && link.savedAt.split('T')[0] === today).length;
             document.getElementById('todayJobs').textContent = `Jobs Applied today: ${todayJobs}`;
 
-            // Calculate the start index for displaying the last 5 links
             const startIndex = Math.max(0, links.length - 5);
-
-            // Display only the last 5 links
-            for (let i = startIndex; i < links.length; i++)
+            for (let i = startIndex - 1; i < links.length; i++)
             {
                 const linkObject = links[i];
+                if (!linkObject) continue; // Skip null or undefined objects
+
                 const listItem = document.createElement('div');
                 listItem.classList.add("row");
 
@@ -113,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function ()
                 const delDiv = document.createElement('div');
                 delDiv.classList.add("col");
 
+                // Access the link URL from the linkObject
                 const linkElement = document.createElement('a');
                 linkElement.href = linkObject.link;
                 linkElement.textContent = linkObject.link;
@@ -131,11 +146,12 @@ document.addEventListener('DOMContentLoaded', function ()
                         chrome.runtime.sendMessage({
                             action: 'editJobs',
                             type: 'edit',
-                            index: i, // Use the current index in the loop
+                            index: i,
                             newLink: newLink
                         }, function (response)
                         {
                             console.log(response);
+                            console.log("3");
                             displayLinks(); // Refresh the list after editing
                         });
                     }
@@ -151,10 +167,11 @@ document.addEventListener('DOMContentLoaded', function ()
                     chrome.runtime.sendMessage({
                         action: 'deleteJobs',
                         type: 'delete',
-                        index: i // Use the current index in the loop
+                        index: i
                     }, function (response)
                     {
                         console.log(response);
+
                         displayLinks(); // Refresh the list after deleting
                     });
                 });
@@ -164,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function ()
                 linkList.appendChild(listItem);
             }
         });
-    }
 
-});
+    }
+})
+
