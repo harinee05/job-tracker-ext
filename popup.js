@@ -34,11 +34,18 @@ document.addEventListener('DOMContentLoaded', function ()
     {
         chrome.storage.sync.get('jobLinks', function (data)
         {
-            const links = data.jobLinks || [];
+            const links = data.jobLinks || []; // Ensure links is an array
             let csvContent = "data:text/csv;charset=utf-8,";
-            links.forEach(function (link)
+            links.forEach(function (linkObject)
             {
-                csvContent += `${link}\n`;
+                // Check if linkObject is not null and has a 'link' property
+                if (linkObject && 'link' in linkObject)
+                {
+                    csvContent += `${linkObject.link}\n`; // Access the 'link' property of the object
+                } else
+                {
+                    console.error('Invalid link object:', linkObject);
+                }
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -89,8 +96,9 @@ document.addEventListener('DOMContentLoaded', function ()
                     displayLinks(); // Refresh the list after saving
                 });
             }
-        });
-    }
+        }
+        )
+    };
 
 
     function displayLinks()
