@@ -93,10 +93,11 @@ document.addEventListener('DOMContentLoaded', function ()
     }
 
 
-
     function displayLinks()
     {
-        linkList.innerHTML = '';
+        const linkList = document.getElementById('linkList');
+        linkList.innerHTML = ''; // Clear the list before adding new items
+
         chrome.storage.sync.get('jobLinks', function (data)
         {
             const links = data.jobLinks || [];
@@ -109,57 +110,49 @@ document.addEventListener('DOMContentLoaded', function ()
             document.getElementById('todayJobs').textContent = `Jobs Applied today: ${todayJobs}`;
 
             const startIndex = Math.max(0, links.length - 5);
-            for (let i = startIndex - 1; i < links.length; i++)
+            for (let i = startIndex; i < links.length; i++)
             {
                 const linkObject = links[i];
                 if (!linkObject) continue; // Skip null or undefined objects
 
+                // Create a row for each job link
                 const listItem = document.createElement('div');
                 listItem.classList.add("row");
 
+                // Add checkbox
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.classList.add("col");
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.addEventListener('change', function ()
+                {
+                    // Handle checkbox change event
+                    console.log('Checkbox checked:', checkbox.checked);
+                    // Implement your logic here
+                    if (checkbox.checked)
+                    {
+                        linkElement.classList.add('strikethrough');
+                    } else
+                    {
+                        linkElement.classList.remove('strikethrough');
+                    }
+                });
+                checkboxDiv.appendChild(checkbox); // Append checkbox to checkboxDiv
+                listItem.appendChild(checkboxDiv); // Append checkboxDiv to listItem
+
+                // Add link
                 const linkDiv = document.createElement('div');
                 linkDiv.classList.add("col-10");
                 linkDiv.classList.add("linker");
-
-                const editDiv = document.createElement('div');
-                editDiv.classList.add("col");
-
-                const delDiv = document.createElement('div');
-                delDiv.classList.add("col");
-
-                // Access the link URL from the linkObject
                 const linkElement = document.createElement('a');
                 linkElement.href = linkObject.link;
                 linkElement.textContent = linkObject.link;
-
                 linkDiv.appendChild(linkElement);
-                listItem.appendChild(linkDiv);
-
-                // Add edit button
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit';
-                editButton.addEventListener('click', function ()
-                {
-                    const newLink = prompt("Edit link:", linkObject.link);
-                    if (newLink)
-                    {
-                        chrome.runtime.sendMessage({
-                            action: 'editJobs',
-                            type: 'edit',
-                            index: i,
-                            newLink: newLink
-                        }, function (response)
-                        {
-                            console.log(response);
-                            console.log("3");
-                            displayLinks(); // Refresh the list after editing
-                        });
-                    }
-                });
-                editDiv.appendChild(editButton);
-                listItem.appendChild(editDiv);
+                listItem.appendChild(linkDiv); // Append linkDiv to listItem
 
                 // Add delete button
+                const delDiv = document.createElement('div');
+                delDiv.classList.add("col");
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.addEventListener('click', function ()
@@ -171,17 +164,15 @@ document.addEventListener('DOMContentLoaded', function ()
                     }, function (response)
                     {
                         console.log(response);
-
                         displayLinks(); // Refresh the list after deleting
                     });
                 });
                 delDiv.appendChild(deleteButton);
-                listItem.appendChild(delDiv);
+                listItem.appendChild(delDiv); // Append delDiv to listItem
 
-                linkList.appendChild(listItem);
+                linkList.appendChild(listItem); // Append listItem to linkList
             }
         });
-
     }
-})
 
+});

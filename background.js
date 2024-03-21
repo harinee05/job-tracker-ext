@@ -14,7 +14,29 @@ function initializeJobLinks()
     });
 }
 
-function updateJobLinks(index, newLink)
+// function updateJobLinks(index, newLink)
+// {
+//     return new Promise((resolve, reject) =>
+//     {
+//         chrome.storage.sync.get(['jobLinks'], (result) =>
+//         {
+//             let links = result.jobLinks || [];
+//             if (index >= 0 && index < links.length)
+//             {
+//                 links[index] = newLink;
+//                 chrome.storage.sync.set({ jobLinks: links }, () =>
+//                 {
+//                     console.log('Job links updated.');
+//                     resolve({ status: "success" });
+//                 });
+//             } else
+//             {
+//                 reject({ status: "error", message: "Invalid index" });
+//             }
+//         });
+//     });
+// }
+function updateJobLinks(index, isChecked)
 {
     return new Promise((resolve, reject) =>
     {
@@ -23,7 +45,8 @@ function updateJobLinks(index, newLink)
             let links = result.jobLinks || [];
             if (index >= 0 && index < links.length)
             {
-                links[index] = newLink;
+                // Update the status of the job link at the specified index
+                links[index].completed = isChecked;
                 chrome.storage.sync.set({ jobLinks: links }, () =>
                 {
                     console.log('Job links updated.');
@@ -82,11 +105,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>
         });
         return true; // Indicates that the response will be sent asynchronously
     }
+    // if (request.action === 'editJobs')
+    // {
+    //     updateJobLinks(request.index, request.newLink)
+    //         .then(response => sendResponse(response))
+    //         .catch(error => sendResponse(error));
+    //     return true; // Indicates that the response will be sent asynchronously
+    // }
+
     if (request.action === 'editJobs')
     {
-        updateJobLinks(request.index, request.newLink)
-            .then(response => sendResponse(response))
-            .catch(error => sendResponse(error));
+        // Handle edit job action
+        const { type, index, isChecked } = request;
+        chrome.storage.sync.get('jobLinks', function (data)
+        {
+            const links = data.jobLinks || [];
+            if (type === 'edit' && index >= 0 && index < links.length)
+            {
+                // Update the completed status of the job link at the specified index
+                links[index].completed = isChecked;
+                // Save the updated links array to storage
+                chrome.storage.sync.set({ jobLinks: links }, function ()
+                {
+                    sendResponse('Job link status updated successfully');
+                });
+            } else
+            {
+                sendResponse('Invalid edit request');
+            }
+        });
         return true; // Indicates that the response will be sent asynchronously
     }
 
@@ -97,4 +144,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>
             .catch(error => sendResponse(error));
         return true; // Indicates that the response will be sent asynchronously
     }
-});
+})

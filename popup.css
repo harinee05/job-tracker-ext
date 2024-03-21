@@ -37,11 +37,9 @@ h1 {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 3fr);
+    grid-template-columns: repeat(3, 1fr);
     /* 3 columns */
-    grid-template-rows: auto;
-    /* Adjust row height based on content */
-    gap: 2px;
+    gap: 10px;
 }
 
 .grid-item {
@@ -96,15 +94,39 @@ h1 {
 }
 
 .linkList {
-
+    list-style-type: none;
     font-size: 12px;
     grid-column: span 3;
     padding: 10px;
     /* Remove default padding */
 }
 
-.linker {
+/* Existing CSS */
 
+.linker {
     overflow-wrap: break-word;
     width: 500px;
+    margin-left: 10px;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
+/* Adjusted CSS for .linker */
+
+.linker {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.linker a {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.linker .actions {
+    display: flex;
+    gap: 10px;
 }
