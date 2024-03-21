@@ -16,6 +16,7 @@ h1 {
     /* Adjust font size as needed */
     margin: 0;
     /* Remove default margin */
+    background-color: #568ea6;
 }
 
 /* 
@@ -38,6 +39,7 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
     /* 3 columns */
     gap: 10px;
+    background-color: #cbe0d7;
 }
 
 .grid-item {
@@ -48,6 +50,7 @@ h1 {
     /* Add padding for spacing */
 }
 
+
 #tools {
     grid-row: 2;
     display: flex;
@@ -56,8 +59,9 @@ h1 {
     justify-content: space-around;
     border-style: double dashed;
     border-color: #6096fd;
-    border-radius: 5%;
+
     grid-column: span 3;
+    background-color: #d9ebd1;
 
 }
 
@@ -86,7 +90,7 @@ h1 {
 
     border-style: dashed;
     border-radius: 10%;
-    border-color: #fb7b8e;
+    border-color: #f7f7f7;
 
 
 }
@@ -131,7 +135,7 @@ h1 {
     /* Align items vertically in the center */
     margin-bottom: 10px;
     /* Add some space between rows */
-    border: 1px solid #ccc;
+    border: 1px solid #568ea6;
     /* Add a border around each row */
     padding: 10px;
     /* Add some padding inside the border */
